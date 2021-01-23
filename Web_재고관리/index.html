@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DB_Alignment_재고관리시스템</title>
+        <style>
+h1 {
+  margin: 1em 0;
+  font-size: 3.2rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  text-align: center;
+}
+.sort-contents {
+  padding: 1em;
+  text-align: center;
+}
+label {
+  margin: 0 1em;
+  font-size: 1.2rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  cursor: pointer;
+}
+label:hover,
+input[name="sort"]:checked + label {
+  color: #000;
+  border-bottom: 2px solid currentColor;
+}
+input[name="sort"]:checked + label {
+  cursor: default;
+}
+label[for="sort-red"]:hover,
+#sort-red:checked + label {
+  color: var(--color-red);
+}
+label[for="sort-blue"]:hover,
+#sort-blue:checked + label {
+  color: var(--color-blue);
+}
+label[for="sort-yellow"]:hover,
+#sort-yellow:checked + label {
+  color: var(--color-yellow);
+}
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1em 0 0;
+  list-style: none;  
+  margin-left: 20%;
+}
+ul li {
+  min-height: 10px;
+}
+li{
+    margin: 10px;
+}
+#search{
+    text-align: center;
+}
+#file{
+    display: none;
+}
+            .inven_input{
+                box-sizing: content-box;
+                text-align: center;
+            }
+            body{
+                text-align: center;
+            }
+            #input, #search{
+                display: none;
+            }
+            input[type=radio]{
+                display: none;
+            }
+            .inven_input{
+                display: none;
+            }
+            #thisk, #thiscount{
+                width: 30px;
+            }
+        </style>
+        <meta charset="utf-8">
+        <script>
+            function isNumeric(num){
+                num = String(num).replace(/^\s+|\s+$/g, "");
+                
+                var regex = /^[0-9]+(\.[0-9]+)?$/g;
+
+                if( regex.test(num) ){
+                    num = num.replace(/,/g, "");
+                    return isNaN(num) ? false : true;
+                }else{ return false;  }
+            }
+            function checkInput(){
+                if(document.getElementsByName("classType")[0].checked == true){
+                    for(var i=0; i<4; i++){
+                        if(document.getElementsByClassName("first_input")[i].value == ""){
+                            alert("데이터를 모두 입력하세요.");
+                            return false;
+                        }
+                    }
+                }else if(document.getElementsByName("classType")[1].checked == true){
+                    for(var i=0; i<5; i++){
+                        if(document.getElementsByClassName("second_input")[i].value == ""){
+                            alert("데이터를 모두 입력하세요.");
+                            return false;
+                        }
+                    }
+                }else if(document.getElementsByName("classType")[2].checked == true){
+                    for(var i=0; i<3; i++){
+                        if(document.getElementsByClassName("third_input")[i].value == ""){
+                            alert("데이터를 모두 입력하세요.");
+                            return false;
+                        }
+                    }
+                }
+            }
+            function backToMain(){
+                document.getElementById("main").style.display = "block";
+                document.getElementById("input").style.display = "none";
+                document.getElementById("search").style.display = "none";
+            }
+        </script>
+    </head>
+    <body>
+        <h1>재고 관리 시스템</h1>
+        <hr>
+        <input type="radio" id="addData" name="menu">
+        <label for="addData">재고 정보 입력</label>
+        <input type="radio" id="searchData" name="menu">
+        <label for="searchData">재고 정보 검색</label>
+        <input type="radio" id="addFile" name="menu">
+        <label for="addFile">파일로 입력</label>
+        <hr>
+        <script>
+            document.getElementById("addData").addEventListener("click",
+            function(){
+                document.getElementById("input").style.display = "block";
+                document.getElementById("search").style.display = "none";
+                document.getElementById("file").style.display = "none";
+            });
+            document.getElementById("searchData").addEventListener("click",
+            function(){
+                document.getElementById("input").style.display = "none";
+                document.getElementById("search").style.display = "block";
+                document.getElementById("file").style.display = "none";
+            });
+            document.getElementById("addFile").addEventListener("click",
+            function(){
+                document.getElementById("input").style.display = "none";
+                document.getElementById("search").style.display = "none";
+                document.getElementById("file").style.display = "block";
+            });
+        </script>
+        <div id="input">
+            <form action="inven_input.php" method="POST" onsubmit="return checkInput();">
+                <input type="radio" id="customer" name="classType" value="customer">
+                <label for="customer">Customer</label>
+
+                <input type="radio" id="transaction" name="classType" value="transaction">
+                <label for="transaction">Transaction</label>
+
+                <input type="radio" id="product" name="classType" value="product">
+                <label for="product">Product</label>
+
+                <div class="inven_input">
+                    <label>Name
+                        <input type="text" name="cus_name" class="first_input"><br>
+                    </label>
+                    <label>Phone
+                        <input type="tel" name="cus_phone" class="first_input"><br>
+                    </label>
+                    <label>Address
+                        <input type="text" name="cus_address" class="first_input"><br>
+                    </label>
+                    <label>Gender
+                        <select id="gender" name="gender" class="first_input">
+                            <option value="">--select--</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                        </select>
+                    </label>
+                </div>
+                
+                <div class="inven_input">
+                    <label>TransactionNumber
+                        <input type="text" name="trans_transactionNumber" class="second_input"><br>
+                    </label>
+                    <label>ProductID
+                        <input type="text" name="trans_productID" class="second_input"><br>
+                    </label>
+                    <label>Price
+                        <input type="text" name="trans_price" class="second_input"><br>
+                    </label>
+                    <label>Date
+                        <input type="date" name="trans_date" class="second_input"><br>
+                    </label>
+                    <label>CustomerName
+                        <input type="text" name="trans_customerName" class="second_input"><br>
+                    </label>
+                </div>
+
+                <div class="inven_input">
+                    <label>Name
+                        <input type="text" name="pro_name" class="third_input"><br>
+                    </label>
+                    <label>ProductID
+                        <input type="text" name="pro_productID" class="third_input"><br>
+                    </label>
+                    <label>SupplierName
+                        <input type="text" name="pro_supplierName" class="third_input"><br>
+                    </label>
+                </div>
+                <hr>
+                <input type="submit">
+            </form>
+            <script>
+                document.getElementById("customer").addEventListener("click",
+                function(){
+                    document.getElementsByClassName("inven_input")[0].style.display = "block";
+                    document.getElementsByClassName("inven_input")[1].style.display = "none";
+                    document.getElementsByClassName("inven_input")[2].style.display = "none";
+                });
+                document.getElementById("transaction").addEventListener("click",
+                function(){
+                    document.getElementsByClassName("inven_input")[0].style.display = "none";
+                    document.getElementsByClassName("inven_input")[1].style.display = "block";
+                    document.getElementsByClassName("inven_input")[2].style.display = "none";
+                });
+                document.getElementById("product").addEventListener("click",
+                function(){
+                    document.getElementsByClassName("inven_input")[0].style.display = "none";
+                    document.getElementsByClassName("inven_input")[1].style.display = "none";
+                    document.getElementsByClassName("inven_input")[2].style.display = "block";
+                });
+            </script>
+        </div>
+        <div id="search">
+            <ul>
+                <li>A. 남자보다 여자가 많이 산 상품의 이름</li>
+                <li>B. <input type="date" id="thisday"> 이전에 가장 많은 거래가 이루어진 <input type="text" id="thisk">가지 상품</li>
+                <li>C. 하나의 supplier에서 <input type="text" id="thiscount" pattern="/[0-9]*/">번 이상의 제품을 산 고객의 이름</li>
+            </ul>
+            <input type="radio" id="a" name="searchType">
+            <label for="a">A</label>
+            <input type="radio" id="b" name="searchType">
+            <label for="b">B</label>
+            <input type="radio" id="c" name="searchType">            
+            <label for="c">C</label>
+            <hr>
+            <div id="result"></div>
+            <script>
+                document.getElementById("a").addEventListener("click",
+                function(){
+                    try{
+                        var url = "localhost:80/a_ajax_server.php";
+                        var request = XMLHttpRequest();
+                        request.addEventListener("readystatechange",
+                        function(){
+                            if(request.readyState == 4 && request.status == 200){
+                                document.getElementById("result").innerHTML = 
+                                    request.requestText;
+                            }
+                        }, false);
+                        request.open("GET", url , true);
+                        request.send();
+                    }catch(exception){
+                        alert("Request Failed");
+                    }
+                });
+                document.getElementById("b").addEventListener("click",
+                function(){
+                    try{
+                        var url = "localhost/b_ajax_server.php";
+                        var request = XMLHttpRequest();
+                        request.addEventListener("readystatechange",
+                        function(){
+                            if(request.readyState == 4 && request.status == 200){
+                                document.getElementById("result").innerHTML = 
+                                    request.requestText;
+                            }
+                        }, false);
+                        request.open("POST", url, true);
+                        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        request.send("value_date=" + document.getElementById("thisday").value + "&value_k=" + document.getElementById("thisk").value);
+                    }catch(exception){
+                        alert("Request Failed");
+                    }
+                });
+                document.getElementById("c").addEventListener("click",
+                function(){
+                    try{
+                        var url = "localhost/c_ajax_server.php";
+                        var request = XMLHttpRequest();
+                        request.addEventListener("readystatechange",
+                        function(){
+                            if(request.readyState == 4 && request.status == 200){
+                                document.getElementById("result").innerHTML = 
+                                    request.requestText;
+                            }
+                        }, false);
+                        request.open("POST", url, true);
+                        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        request.send("value_count=" + document.getElementById("thiscount").value);
+                    }catch(exception){
+                        alert("Request Failed");
+                    }
+                });
+            </script>
+        </div>
+        <div id="file">
+            <form action="file_input.php" method="post" enctype="multipart/form-data">
+                <input type="file" name="csvFile" required><br><hr>
+                <input type="submit" value="파일 제출">
+            </form>
+        </div>
+    </body>
+</html>
